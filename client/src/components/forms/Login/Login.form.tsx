@@ -1,12 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { PulseLoader } from "react-spinners";
-import { login } from "../../../api/login";
-import { useAuth } from "../../../hooks/useAuth";
-import { LoginInputs } from "../../../types/Login";
-import { FormInput } from "../../components";
-import styles from "./Login.module.scss";
+import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { PulseLoader } from 'react-spinners';
+import { login } from '../../../api/login';
+import { useAuth } from '../../../hooks/useAuth';
+import { LoginInputs } from '../../../types/LoginInputs';
+import { FormInput } from '../../components';
+import styles from './Login.module.scss';
 
 type Props = {
   handleClose: () => void;
@@ -29,7 +29,7 @@ const LoginForm = ({ handleClose }: Props) => {
     },
     onError(error) {
       if (error instanceof Error) {
-        setError("password", {
+        setError('password', {
           message: error.message,
         });
       }
@@ -62,7 +62,7 @@ const LoginForm = ({ handleClose }: Props) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
       <FormInput
-        name={"username"}
+        name={'username'}
         id="username"
         label="Username"
         placeholder="Username..."
@@ -72,7 +72,7 @@ const LoginForm = ({ handleClose }: Props) => {
         error={errors.username}
       />
       <FormInput
-        name={"password"}
+        name={'password'}
         id="password"
         label="Password"
         type="password"
@@ -84,7 +84,7 @@ const LoginForm = ({ handleClose }: Props) => {
       />
 
       <button type="submit" className={styles.submit} disabled={isPending}>
-        {isPending ? <PulseLoader /> : "Login"}
+        {isPending ? <PulseLoader /> : 'Login'}
       </button>
     </form>
   );

@@ -1,4 +1,4 @@
-import { LoginInputs } from "../types/Login";
+import { LoginInputs } from '../types/LoginInputs';
 
 export const login = async ({
   password,
@@ -8,10 +8,10 @@ export const login = async ({
 
   return new Promise<{ username: string }>((resolve, reject) => {
     fetch(`http://${VITE_SERVER_HOST}:${VITE_SERVER_PORT}/auth/login`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ username, password }),
     })
@@ -22,7 +22,7 @@ export const login = async ({
         if (data.statusCode === 401) {
           throw new Error(data.message);
         }
-        localStorage.setItem("token", data.access_token);
+        localStorage.setItem('token', data.access_token);
         resolve({ username });
       })
       .catch((err) => reject(new Error(err.message)));
