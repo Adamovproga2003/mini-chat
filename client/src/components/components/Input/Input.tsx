@@ -17,9 +17,6 @@ export type InputProps = {
   "size"
 >;
 
-// Using maps so that the full Tailwind classes can be seen for purging
-// see https://tailwindcss.com/docs/optimizing-for-production#writing-purgeable-html
-
 export const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
   (
     { id, name, label, type = "text", className = "", placeholder, ...props },

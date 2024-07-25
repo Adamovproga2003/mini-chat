@@ -1,33 +1,63 @@
-import { SubmitHandler, useForm } from "react-hook-form";
-import { FormInput } from "../../components/FormInput/FormInput";
+import { useMutation } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { PulseLoader } from "react-spinners";
+import { signUp } from "../../../api/sign-up";
+import { useAuth } from "../../../hooks/useAuth";
+import { SignUpInputs } from "../../../types/SignUpInputs";
+import { FormInput } from "../../components";
 import styles from "./SignUp.module.scss";
-type Inputs = {
-  username: string;
-  password: string;
-  confirmPassword: string;
+
+type Props = {
+  handleClose: () => void;
 };
 
-type Props = {};
-
-const SignUpForm = (props: Props) => {
+const SignUpForm = ({ handleClose }: Props) => {
   const {
     register,
     handleSubmit,
-    watch,
     setError,
     formState: { errors },
-  } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = ({
-    password,
-    confirmPassword,
-    username,
-  }) => {
-    if (password !== confirmPassword) {
-      setError("confirmPassword", {
-        message: "Confirm password is not match with the password",
-      });
+  } = useForm<SignUpInputs>();
+
+  const { onChangeAuth, onChangeUsername } = useAuth();
+
+  const { mutate, isPending, isSuccess } = useMutation({
+    mutationFn: async (values: SignUpInputs) => {
+      const username = await signUp(values);
+      return { username };
+    },
+    onError(error: Error) {
+      if (error instanceof Error) {
+        setError("confirmPassword", {
+          message: error.message,
+        });
+      }
+    },
+    onSuccess(data) {
+      if (data) {
+        const { username } = data;
+        onChangeAuth(true);
+        onChangeUsername(username || null);
+      }
+    },
+  });
+
+  const onSubmit = (data: SignUpInputs) => mutate(data);
+
+  useEffect(() => {
+    if (isSuccess) {
+      const id = setTimeout(() => {
+        handleClose();
+      }, 2000);
+
+      return () => clearTimeout(id);
     }
-  };
+  }, [handleClose, isSuccess]);
+
+  if (isSuccess) {
+    return <div>Sign up successful! You can now log in.</div>;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
@@ -64,8 +94,8 @@ const SignUpForm = (props: Props) => {
         error={errors.confirmPassword}
       />
 
-      <button type="submit" className={styles.submit}>
-        Sign up
+      <button type="submit" className={styles.submit} disabled={isPending}>
+        {isPending ? <PulseLoader /> : "Sign up"}
       </button>
     </form>
   );

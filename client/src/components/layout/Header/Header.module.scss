@@ -1,9 +1,11 @@
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 20px 30px;
   background-color: rgba($color: #000000, $alpha: 0.1);
+  &_wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   &_logo {
     font-size: 40px;
     font-weight: 700;
@@ -11,5 +13,10 @@
   &_actions {
     display: flex;
     gap: 10px;
+    &_logOut {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
   }
 }
